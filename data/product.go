@@ -1,21 +1,25 @@
 package data
 
-import "time"
+import (
+	"encoding/json"
+	"io"
+	"time"
+)
 
+//Product ...
 type Product struct {
-	ID          int
-	Name        string
-	Description string
-	Price       float32
-	SKU         string
-	CreatedOn   string
-	UpdatedOn   string
-	DeletedOn   string
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"desc"`
+	Price       float32 `json:"price"`
+	SKU         string  `json:"sku"`
+	CreatedOn   string  `json:"-"`
+	UpdatedOn   string  `json:"-"`
+	DeletedOn   string  `json:"-"`
 }
 
-var ProductList []*Product
-	
-ProductList = []*Product{
+//ProductList ...
+var ProductList = Products{
 	&Product{
 		ID:          1,
 		Name:        "Latte",
@@ -38,6 +42,16 @@ ProductList = []*Product{
 	},
 }
 
-fuc GetProducts() []*Product {
-	return ProductList
+//GetProducts ...
+func GetProducts() *Products {
+	return &ProductList
+}
+
+//Products ...
+type Products []*Product
+
+//ToJSON ...
+func (p *Products) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
 }

@@ -3,6 +3,8 @@ package handlers
 import (
 	"log"
 	"net/http"
+
+	"github.com/unsmoker/micsroservices/data"
 )
 
 //Pruducts ...
@@ -17,5 +19,10 @@ func NewProduct(l *log.Logger) *Pruducts {
 
 //ServeHTTP ...
 func (p *Pruducts) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	lp := data.NewProduct()
+	lp := data.GetProducts()
+	err := lp.ToJSON(w)
+	if err != nil {
+		http.Error(w, "Unable Read to json", http.StatusInternalServerError)
+		return
+	}
 }
